@@ -5,7 +5,7 @@ var path = require('path');
 var tree_walk = require('tree-walk');
 var fs = require('fs');
 
-var chalk = require('chalk');
+var chalk = require('cli-color-keywords')();
 
 module.exports = function(str, commonRoot) {
 	var obj = {label: ''};
@@ -33,12 +33,14 @@ module.exports = function(str, commonRoot) {
 		});
 	});
 
-	var nodeWalker = tree_walk(function(item){
-		return item.nodes;
-	});
+	var nodeWalker = tree_walk(
+		function(item){
+			return item.nodes;
+		}
+	);
 
 	nodeWalker.postorder(obj, function(item, index, parent) {
-		if (item.nodes.length) {
+		if (chalk.enabled && item.nodes.length) {
 			item.color = 'cyan';
 		}
 
@@ -59,10 +61,14 @@ module.exports = function(str, commonRoot) {
 				var dir = path.dirname(label);
 				var basename = path.basename(label);
 
-				item.label = `${chalk.cyan(dir + '/')}${basename}`;
+				dir += dir === '/' ? '' : '/'
+
+				item.label = `${chalk.cyan(dir)}${basename}`;
 			}
 		}
 	);
 
 	return CAT(obj);
 };
+
+module.exports.chalk = chalk;

@@ -2,7 +2,7 @@
 
 'use strict';
 var meow = require('meow');
-var fileLister = require('./');
+var treeList = require('./');
 
 var cli = meow({
 	help: [
@@ -18,7 +18,7 @@ var data;
 var encoding = 'utf-8';
 
 var processData = function() {
-	console.log(fileLister(data || '', argv.root || ''));
+	console.log(treeList(data || '', argv.root || ''));
 };
 
 if (process.stdin.isTTY) {
@@ -34,16 +34,17 @@ else {
   process.stdin.setEncoding(encoding);
 
   process.stdin.on('readable', function() {
-    var chunk;
-    while (chunk = process.stdin.read()) {
-      data += chunk;
-    }
+	var chunk;
+
+	while (chunk = process.stdin.read()) {
+		data += chunk;
+	}
   });
 
   process.stdin.on('end', function () {
-    // There will be a trailing \n from the user hitting enter. Get rid of it.
-    data = data.replace(/\n$/, '');
+	// There will be a trailing \n from the user hitting enter. Get rid of it.
+	data = data.replace(/\n$/, '');
 
-    processData();
+	processData();
   });
 }

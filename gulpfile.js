@@ -17,12 +17,14 @@ gulp.task('test-unit', function() {
 });
 
 gulp.task('test-cover', function() {
-	return gulp.src(['lib/**/*.js'])
+	return gulp.src(['./*.js'])
 		.pipe(plugins.istanbul())
 		.pipe(plugins.istanbul.hookRequire());
 });
 
 gulp.task('test-coverage', ['test-cover'], function() {
+	process.argv.push('--display-raw');
+
 	return gulp.src(['test/**/*.js', '!test/fixture/*.js'])
 		.pipe(plugins.mocha())
 		.pipe(plugins.istanbul.writeReports());
