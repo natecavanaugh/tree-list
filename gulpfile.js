@@ -12,6 +12,8 @@ gulp.task('test', function(done) {
 });
 
 gulp.task('test-unit', function() {
+	process.argv.push('--display-raw');
+
 	return gulp.src(['test/**/*.js', '!test/fixture/*.js'])
 		.pipe(plugins.mocha());
 });
