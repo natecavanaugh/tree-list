@@ -21,7 +21,7 @@ var paths = [
 ].join('\n');
 
 var tree = [
-	'/first',
+	'first',
 	'├─ second/third/file.js',
 	'└─ fourth/another.js'
 ].join('\n');
