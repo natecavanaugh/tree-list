@@ -1,5 +1,5 @@
 'use strict';
-var treeList = require('../');
+var treeList = require('../lib/');
 var chalk = treeList.chalk;
 
 var assert = require('assert');
