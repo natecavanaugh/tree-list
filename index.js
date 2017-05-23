@@ -8,49 +8,66 @@ var fs = require('fs');
 var chalk = require('cli-color-keywords')();
 
 module.exports = function(str, commonRoot) {
-	var obj = {label: ''};
+	var obj = {
+		label: ''
+	};
 
 	var input = (str || '').split('\n');
 
-	var obj = {label: '', nodes: []};
+	var obj = {
+		label: '',
+		nodes: []
+	};
 
-	_.forEach(input, function(item, index) {
-		var cache = obj.nodes;
+	_.forEach(
+		input,
+		function(item, index) {
+			var cache = obj.nodes;
 
-		item = item.split(path.sep);
+			item = item.split(path.sep);
 
-		var last = item.length - 1;
+			var last = item.length - 1;
 
-		_.forEach(item, function(item, index) {
-			var fileObj = _.find(cache, ['label', item]);
+			_.forEach(
+				item,
+				function(item, index) {
+					var fileObj = _.find(cache, ['label', item]);
 
-			if (!fileObj) {
-				fileObj = {label: item, nodes: []};
-				cache.push(fileObj);
-			}
+					if (!fileObj) {
+						fileObj = {
+							label: item,
+							nodes: []
+						};
+						cache.push(fileObj);
+					}
 
-			cache = fileObj.nodes;
-		});
-	});
+					cache = fileObj.nodes;
+				}
+			);
+		}
+	);
 
 	var nodeWalker = tree_walk(
-		function(item){
+		function(item) {
 			return item.nodes;
 		}
 	);
 
-	nodeWalker.postorder(obj, function(item, index, parent) {
-		if (chalk.enabled && item.nodes.length) {
-			item.color = 'cyan';
-		}
+	nodeWalker.postorder(
+		obj,
+		function(item, index, parent) {
+			if (chalk.enabled && item.nodes.length) {
+				item.color = 'cyan';
+			}
 
-		if (parent && parent.nodes.length === 1) {
-			var label = item.label;
-			parent.label = parent.label + path.sep + label;
-			parent.nodes = item.nodes;
-			parent.color = item.color;
+			if (parent && parent.nodes.length === 1) {
+				var label = item.label;
+				parent.label = parent.label + path.sep + label;
+				parent.nodes = item.nodes;
+				parent.color = item.color;
+			}
 		}
-	});
+	);
 
 	nodeWalker.preorder(
 		obj,
