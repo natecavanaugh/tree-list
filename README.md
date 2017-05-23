@@ -6,7 +6,7 @@
 > Print a list of files into an ASCII tree
 
 ## Why?
-[https://en.wikipedia.org/wiki/Tree_(Unix)](tree) is an awesome UNIX command, but there are two issues with it that this module attempts to address. The first is that tree relies on the file system, so there's no way to print out an arbitrary list of files into an ASCII tree.
+[tree](https://en.wikipedia.org/wiki/Tree_(Unix)) is an awesome UNIX command, but there are two issues with it that this module attempts to address. The first is that tree relies on the file system, so there's no way to print out an arbitrary list of files into an ASCII tree.
 The second is that if any of the directories only contain a single directory, they all still take up an entire line.
 However, to me, this is an inefficient use of space, so this module will collapse directories with only a single entry down to the smallest line it can.
 
