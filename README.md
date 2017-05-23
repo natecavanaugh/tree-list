@@ -3,8 +3,14 @@
 [![build status][travis-image]][travis-url]
 
 
-> My top-notch module
+> Print a list of files into an ASCII tree
 
+## Why?
+[https://en.wikipedia.org/wiki/Tree_(Unix)](tree) is an awesome UNIX command, but there are two issues with it that this module attempts to address. The first is that tree relies on the file system, so there's no way to print out an arbitrary list of files into an ASCII tree.
+The second is that if any of the directories only contain a single directory, they all still take up an entire line.
+However, to me, this is an inefficient use of space, so this module will collapse directories with only a single entry down to the smallest line it can.
+
+This module is in no way meant to replace the tree command, or even share a similar API, but when you have a list of file paths, it can be handy to print them out in graphical format.
 
 ## Install
 
@@ -16,10 +22,31 @@ $ npm install --save tree-list
 ## Usage
 
 ```js
-var fileLister = require('tree-list');
+var treeList = require('tree-list');
 
-fileLister('belgian');
-//=> BEST BEER EVAR!
+treeList(['first/second/third/file.js', 'first/fourth/another.js']);
+//=> first
+	├─ second/third/file.js
+	└─ fourth/another.js
+
+treeList(`first/second/third/file.js
+first/fourth/another.js`);
+//=> first
+	├─ second/third/file.js
+	└─ fourth/another.js
+
+treeList(
+	['first/second/third/file.js', 'first/fourth/another.js'],
+	{
+		expand: true
+	}
+);
+//=> first
+	├─ second
+	│  └─ third
+	│     └─ file.js
+	└─ fourth
+		└─ another.js
 ```
 
 ## CLI
@@ -30,40 +57,55 @@ $ npm install --global tree-list
 ```
 $ tree-list --help
 
-  Usage
-    tree-list [input]
+ $ tree-list [string]
+ $ [string] | tree-list
 
-  Example
-    tree-list
-    BEER!
+ Options
+ -e, --expand Whether to expand directories to their own line, even if it only has another directory as it's child
 
-    tree-list belgian
-    BEST BEER EVAR!
+ Examples:
 
-  Options
-    --foo Lorem ipsum. Default: false
+ $ tree-list "foo/bar/baz
+ foo/bar/foo
+ foo/baz bar/baz/boo.js"
+
+ ├─ foo
+ │  ├─ bar
+ │  │  ├─ baz
+ │  │  └─ foo
+ │  └─ baz
+ └─ bar/baz/boo.js
+
+ $ git diff --name-only HEAD^.. | tree-list
+ ├─ lib
+ │  ├─ cli
+ │  │  ├─ index.js
+ │  │  └─ args.js
+ │  └─ index.js
+ └─ test/cli/index.js
 ```
 
 
 ## API
 
-### fileLister(input, [options])
+### treeList(input, [options])
 
 #### input
 
 *Required*
-Type: `string`
+Type: `array` or `string`
 
-Lorem ipsum.
+An array or newline delimited string of paths to print out a tree for
 
 #### options
 
-##### foo
+##### expand
 
 Type: `boolean`
 Default: `false`
 
-Lorem ipsum.
+By default, directory paths will be collapsed so that directories that only contain directories won't be printed on their own line.
+Passing this flag will print each directory on it's own line, regardless of it's children.
 
 
 ## License
